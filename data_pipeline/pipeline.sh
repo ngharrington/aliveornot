@@ -49,7 +49,7 @@ SOURCE_FILE=/tmp/data.txt
 echo "Downloading the imdb datset at https://datasets.imdbws.com/name.basics.tsv.gz..."
 wget -q -O $SOURCE_FILE.gz https://datasets.imdbws.com/name.basics.tsv.gz
 
-echo "Extracting the gzipped files"
+echo "Extracting the gzipped files.."
 gzip -d /tmp/data.txt.gz
 
 echo "creating properly quoted tsv..."
@@ -67,6 +67,6 @@ $SQLITE_BINARY $DB_FILE < import.sql
 
 echo "import complete"
 
-echo "cleaning up intermediate file."
+echo "cleaning up intermediate file..."
 rm -f $INTERMEDIATE_FILE
 rm -f $SOURCE_FILE
