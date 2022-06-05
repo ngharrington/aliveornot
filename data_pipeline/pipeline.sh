@@ -15,6 +15,7 @@ function usage()
 
 SQLITE_BINARY=/usr/bin/sqlite3
 INTERMEDIATE_FILE=/tmp/cleaned.txt
+DIRNAME=$(dirname -- "$0")
 
 
 while [ "$1" != "" ]; do
@@ -60,10 +61,10 @@ rm -f $DB_FILE
 $SQLITE_BINARY $DB_FILE "VACUUM;"
 
 echo "creating sqlite3 target table 'people'..."
-$SQLITE_BINARY $DB_FILE < people.sql
+$SQLITE_BINARY $DB_FILE < $DIRNAME/people.sql
 
 echo "importing to sqlite..."
-$SQLITE_BINARY $DB_FILE < import.sql
+$SQLITE_BINARY $DB_FILE < $DIRNAME/import.sql
 
 echo "import complete"
 
