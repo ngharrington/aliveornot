@@ -16,3 +16,6 @@ CREATE TABLE people (
     primaryProfession TEXT,
     knownForTitles TEXT
 );
+
+
+DROP TABLE people_import;

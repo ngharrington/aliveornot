@@ -1,5 +1,5 @@
 .mode tabs
-.import '|tail -n +2 /tmp/cleaned.txt' people_import
+.import /tmp/cleaned.txt people_import
 
 INSERT INTO people
 SELECT
