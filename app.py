@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
 import os
@@ -22,7 +23,19 @@ class AliveSchema(BaseModel):
     name: str
     is_alive: bool
 
+origins = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080"
+]
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["GET"],
+)
 
 @app.get("/")
 async def root():
@@ -43,7 +56,7 @@ async def get_person(id: int) -> AliveSchema:
     return response
     
 @app.get("/people")
-async def get_person_by_name(name: str):
+async def get_person_by_name(name: str) -> AliveSchema:
     """Given an full name for a person, respond with information about that person"""
     db = get_db_connection()
     cur = db.cursor()
