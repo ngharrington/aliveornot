@@ -1,10 +1,11 @@
+from sys import prefix
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
 import os
 
-SQLITE_DB = os.environ.get("ALIVE_OR_NOT_SQLITE_DB", "db.sqlite")
+SQLITE_DB = os.environ.get("ALIVE_OR_NOT_SQLITE_DB", "/code/db.sqlite")
 
 class DbConnectionError(Exception):
     pass
@@ -37,11 +38,11 @@ app.add_middleware(
     allow_methods=["GET"],
 )
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/people/{id}")
+@app.get("/api/people/{id}")
 async def get_person(id: int) -> AliveSchema:
     """Given an ID for a person, respond with information about that person"""
     db = get_db_connection()
@@ -55,7 +56,7 @@ async def get_person(id: int) -> AliveSchema:
     )
     return response
     
-@app.get("/people")
+@app.get("/api/people")
 async def get_person_by_name(name: str) -> AliveSchema:
     """Given an full name for a person, respond with information about that person"""
     db = get_db_connection()
