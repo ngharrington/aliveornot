@@ -1,0 +1,6 @@
+http://localhost:8080
+
+root * /usr/share/caddy
+file_server
+
+reverse_proxy /api* api-dev:5000
