@@ -1,8 +1,8 @@
-# # Floating IP assigned to a single IP
+# Floating IP assigned to a single IP
 
-# data "digitalocean_ssh_key" "neal" {
-#   name = "neal-xps"
-# }
+data "digitalocean_ssh_key" "neal" {
+  name = "neal-xps"
+}
 
 resource "digitalocean_floating_ip" "aliveornot-floating-ip" {
   region = "nyc3"
