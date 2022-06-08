@@ -1,3 +1,5 @@
+# Floating IP assigned to a single IP
+
 data "digitalocean_ssh_key" "neal" {
   name = "neal-xps"
 }
