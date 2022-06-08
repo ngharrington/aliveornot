@@ -23,5 +23,3 @@ jobs:
     - name: terraform plan
       if: steps.filter.outputs.terraform == 'true'
       run: cd terraform && terraform plan"
-      run: "echo 'running terraform plan' && terraform plan"
-
