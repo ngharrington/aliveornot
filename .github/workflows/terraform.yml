@@ -22,4 +22,4 @@ jobs:
     # run only if 'backend' files were changed
     - name: terraform plan
       if: steps.filter.outputs.terraform == 'true'
-      run: cd terraform && terraform plan"
+      run: cd terraform && terraform plan
