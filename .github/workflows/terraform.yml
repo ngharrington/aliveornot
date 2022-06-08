@@ -34,5 +34,5 @@ jobs:
         cd terraform && terraform init;
         terraform plan -out plan.tfplan;
     - name: terraform apply
-      if: steps.filter.outputs.terraform == 'true' && github.ref == 'refs/heads/main'
+      if: steps.filter.outputs.terraform == 'true' && github.event.action == 'closed' && github.event.pull_request.merged == true
       run: terraform plan --auto-approve plan.tfplan
