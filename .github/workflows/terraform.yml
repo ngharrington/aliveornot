@@ -19,7 +19,6 @@ jobs:
         # terraform_version: 0.13.0
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-
     # run only if 'backend' files were changed
     - name: backend tests
       if: steps.filter.outputs.terraform == 'true'
