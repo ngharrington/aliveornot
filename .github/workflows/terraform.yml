@@ -20,6 +20,6 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # run only if 'backend' files were changed
-    - name: terraform plan
+    - name: terraform init
       if: steps.filter.outputs.terraform == 'true'
-      run: cd terraform && terraform plan
+      run: cd terraform && terraform init
