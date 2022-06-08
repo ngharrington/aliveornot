@@ -9,10 +9,6 @@ services:
     image: aliveornot-api
     volumes:
       - ./api:/code
-    ports:
-      - 8081:5000
-    expose:
-      - 5000
     networks:
       aliveornot:
 
@@ -24,12 +20,14 @@ services:
       - ./docker/files/Caddyfile:/etc/caddy/Caddyfile
     ports:
       - 8080:8080
+    env_file:
+      - caddy.env.dev
     networks:
       aliveornot:
 
 networks:
   aliveornot:
-    driver: bridge
+
 
 
  
