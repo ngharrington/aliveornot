@@ -20,8 +20,8 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # run only if 'backend' files were changed
-    - name: backend tests
+    - name: terraform plan
       if: steps.filter.outputs.terraform == 'true'
-      run: "echo 'changing to tf directory' && cd terraform"
+      run: cd terraform && terraform plan"
       run: "echo 'running terraform plan' && terraform plan"
 
