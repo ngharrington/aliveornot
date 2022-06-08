@@ -24,3 +24,4 @@ jobs:
       if: steps.filter.outputs.terraform == 'true'
       run: "echo 'changing to tf directory' && cd terraform"
       run: "echo 'running terraform plan' && terraform plan"
+
