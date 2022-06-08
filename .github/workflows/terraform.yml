@@ -23,4 +23,4 @@ jobs:
     # run only if 'backend' files were changed
     - name: backend tests
       if: steps.filter.outputs.terraform == 'true'
-      run: "ls"
+      run: "terraform version"
