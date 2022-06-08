@@ -3,6 +3,7 @@ on:
 
 jobs:
   plan:
+    if: contains(github.event.head_commit.message, 'tf plan')
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -15,5 +16,5 @@ jobs:
 
     # run only if 'backend' files were changed
     - name: backend tests
-      if: steps.filter.outputs.terraform == 'true' && contains(github.event.head_commit.message, 'tf plan')
+      if: steps.filter.outputs.terraform == 'true'
       run: "echo i'm in the action"
