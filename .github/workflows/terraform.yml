@@ -17,4 +17,4 @@ jobs:
     # run only if 'backend' files were changed
     - name: backend tests
       if: steps.filter.outputs.terraform == 'true'
-      run: "echo i'm in the action"
+      run: "echo 'i'm in the action'"
