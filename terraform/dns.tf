@@ -15,6 +15,7 @@ resource "digitalocean_record" "www" {
   value  = digitalocean_floating_ip.aliveornot-floating-ip.ip_address
 }
 
+
 # Add an A record to the domain for www.example.com.
 resource "digitalocean_record" "root" {
   domain = digitalocean_domain.default.id
