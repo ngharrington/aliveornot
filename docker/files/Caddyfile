@@ -1,4 +1,4 @@
-http://localhost:8080
+{$SITE_ADDRESS}
 
 root * /usr/share/caddy
 file_server
