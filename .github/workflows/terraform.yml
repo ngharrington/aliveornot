@@ -2,7 +2,7 @@ on:
   pull_request:
     branches:
     - main
-    types: [opened, reopened, closed]
+    types: [opened, reopened, closed, synchronized]
 
 jobs:
   plan:
