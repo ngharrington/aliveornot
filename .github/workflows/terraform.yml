@@ -29,7 +29,7 @@ jobs:
       if: steps.filter.outputs.terraform
       run: |
         cd terraform && terraform init;
-        terraform plan -out plan.tfplan;
+        terraform plan -out /tmp/plan.tfplan;
     - name: terraform apply
       if: steps.filter.outputs.terraform && github.event.pull_request.merged
-      run: terraform apply --auto-approve plan.tfplan
+      run: terraform apply --auto-approve /tmp/plan.tfplan
