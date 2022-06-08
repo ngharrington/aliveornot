@@ -15,5 +15,5 @@ jobs:
 
     # run only if 'backend' files were changed
     - name: backend tests
-      if: steps.filter.outputs.terraform == 'true'
+      if: steps.filter.outputs.terraform == 'true' && contains(github.event.head_commit.message, 'tf plan')
       run: "echo i'm in the action"
