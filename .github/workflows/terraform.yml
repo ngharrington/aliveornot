@@ -1,14 +1,11 @@
 on:
-  push:
-    branches:
-    - main
   pull_request:
     branches:
     - main
+    types: [opened, reopened, closed]
 
 jobs:
   plan:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -34,5 +31,5 @@ jobs:
         cd terraform && terraform init;
         terraform plan -out plan.tfplan;
     - name: terraform apply
-      if: steps.filter.outputs.terraform == 'true' && github.event.pull_request.merged == true
+      if: steps.filter.outputs.terraform == 'true' && github.event.pull_request.merged == 'true'
       run: terraform apply --auto-approve plan.tfplan
