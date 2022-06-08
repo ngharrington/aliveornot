@@ -3,7 +3,7 @@ on:
 
 jobs:
   plan:
-    if: ( github.event_name == "pull_request" || contains(github.event.head_commit.message, 'tf plan') )
+    if: ( github.event_name == 'pull_request' || contains(github.event.head_commit.message, 'tf plan') )
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
