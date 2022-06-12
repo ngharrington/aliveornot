@@ -36,6 +36,7 @@ build {
     ]
  
     provisioner "ansible" {
+      groups = ["webservers"]
       playbook_file = "./playbook.yml"
     }
 }

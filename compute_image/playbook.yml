@@ -1,13 +1,47 @@
 ---
 - name: aliveornot webserver
-  hosts: default
+  hosts: webservers
   vars:
     users:
     - neal
     - rita
     - alex
   tasks:
-    - name: Create user accounts and make them sudo.
+
+    # Probably a better way to do this
+    - name: Wait for 3 minutes so as to not run into digitalocean init processes (bastards.)
+      pause:
+        minutes: 3
+
+    - name: Set root group to allow for passwordless sudo
+      become: true
+      ansible.builtin.template:
+        src: ./templates/dont-prompt.j2
+        dest: /etc/sudoers.d/dont-prompt
+        owner: root
+        group: root
+        mode: '0644'
+      tags: policy
+
+    - name: Disable ssh for root user
+      become: true
+      ansible.builtin.template:
+        src: ./templates/disable-root.j2
+        dest: /etc/ssh/sshd_config.d/disable-root.conf
+        owner: root
+        group: root
+        mode: '0644'
+      tags: policy
+
+    - name: Stop and Start ssh
+      become: true
+      service:
+        name: ssh
+        state: restarted
+      tags: policy
+
+    - name: Create user accounts and make them sudoers.
+      become: true
       user:
         name: "{{ item }}"  
         shell: /bin/bash
@@ -18,3 +52,49 @@
       authorized_key:
         user: neal
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPb4FdH/vm5+hD0DCt1Bxu1jvjdK/okqRFS/CgQ62790L/CwZOKq599PLPzUPAMCnC1L73kgvggp4uWfLcJoD+LMKJqEkITa9CF0qf/k494gG+LJePAEaRHhKrdisn11NrVBcSOgjJjjlMMa8F2Y7iUqdX3w2cMQuMJOSNdzEZnlDkA906xgVOAHD7nsK/pFh72EhSpx3PTuUlAZaMOKFf3rHzWtuqlmT/o9q/ZRZjSi+jpDZ558+2PdJ81uZzc3q7uKV3wqwqlj6cKI7e/D1ryOxJ4aGjQJPNbVXaIXCa4RnbH7dUhhK0eeHN6niiWoY63JoGRmxImvadcynCN1dWfxcVnhwadAcUh6O6U46XE+9H30hjU2JLAFpORznDOHItaB9BAyKTacog42rgIW6oTRa0lVJcgpV1ca0IhYVMLVQnFMdTxFx6MTUezKbU70cybobLz34piKYN6qnn6NJ6Upfg+mzYb2BJ/LZLcG6OT091izskyP1ydc5dPUK9Ouc= neal@neal-xps
+      tags: users
+
+    - name: Create ansible account and make them sudoers.
+      become: true
+      user:
+        name: "ansible"
+        shell: /bin/bash
+        groups: "sudo"
+      tags: users
+
+    - name: deploy authorized ssh public keys
+      become: true
+    # Just for neal right now as I don't have pubkeys for rita and alex
+      authorized_key:
+        user: ansible
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDm7YjW4qIVUr391XcFEZIXHeLhiLTW3+LX7pkem6ECUIz5N7O/FyLKeuMk45YJwGZcTGO+G0FACJUETvma9yiNU/XagD5D/GTOFRgt0wxhsasC/LQ6BYgBOvgCpvkrD5YKp7aCi8mwpAIfKZJgJ6CKT55V2L/vDFSwFw26RuNt74iyhjroIAnM8Aq/YTg6DDDIkphE2SEoIAHTQw7eNtLzIN8LdXuAUVhBKLQGjgaqHkqqwaRgxfB7GMWatiF91GVTiCJgH+hR1Heljn8BFh6mLh1ND/FgP24bSCI2ASeSkbR+6paBVLZx4jX0xSSXY2l8BWdNoys6ugzeULt2hyKFbFlRYODiEtzdql81QL25rWBogstVboyrW2/UJuQjdAG67KxFm/hA4XDXQDg72gP2hf8JN9tdn+pXnEJC6TOif+vhdXhU0rDdWnr1AdFrkxjus+Q23+k2ZoL+4iYySTvkRrBeZF1E0aYRQbPL7umgiUi4omcqyWiuBx0w0vutHFk= neal@neal-xps
+      tags: users
+
+    - name: Add Docker GPG apt Key
+      become: true
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      become: true
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+      tags: docker
+
+    - name: Update apt and install docker-ce
+      become: true
+      apt:
+        name: docker-ce=5:20.10.17~3-0~ubuntu-focal
+        state: present
+        update_cache: true
+      tags: docker
+
+    - name: Install docker-compose
+      become: true
+      apt:
+        name: docker-compose-plugin=2.6.0~ubuntu-focal
+        state: present
+      tags: docker
+    
