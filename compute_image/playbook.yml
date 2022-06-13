@@ -33,12 +33,20 @@
         mode: '0644'
       tags: policy
 
-    - name: Stop and Start ssh
+    - name: stop and Start ssh
       become: true
       service:
         name: ssh
         state: restarted
       tags: policy
+
+    - name: Create ansible account and make them sudoers.
+      become: true
+      user:
+        name: "ansible"
+        shell: /bin/bash
+        groups: "sudo"
+      tags: base
 
     - name: Create user accounts and make them sudoers.
       become: true
@@ -47,6 +55,7 @@
         shell: /bin/bash
         groups: "sudo"
       with_items: "{{ users }}"
+    
     - name: deploy authorized ssh public keys
     # Just for neal right now as I don't have pubkeys for rita and alex
       authorized_key:
@@ -54,21 +63,36 @@
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPb4FdH/vm5+hD0DCt1Bxu1jvjdK/okqRFS/CgQ62790L/CwZOKq599PLPzUPAMCnC1L73kgvggp4uWfLcJoD+LMKJqEkITa9CF0qf/k494gG+LJePAEaRHhKrdisn11NrVBcSOgjJjjlMMa8F2Y7iUqdX3w2cMQuMJOSNdzEZnlDkA906xgVOAHD7nsK/pFh72EhSpx3PTuUlAZaMOKFf3rHzWtuqlmT/o9q/ZRZjSi+jpDZ558+2PdJ81uZzc3q7uKV3wqwqlj6cKI7e/D1ryOxJ4aGjQJPNbVXaIXCa4RnbH7dUhhK0eeHN6niiWoY63JoGRmxImvadcynCN1dWfxcVnhwadAcUh6O6U46XE+9H30hjU2JLAFpORznDOHItaB9BAyKTacog42rgIW6oTRa0lVJcgpV1ca0IhYVMLVQnFMdTxFx6MTUezKbU70cybobLz34piKYN6qnn6NJ6Upfg+mzYb2BJ/LZLcG6OT091izskyP1ydc5dPUK9Ouc= neal@neal-xps
       tags: users
 
-    - name: Create ansible account and make them sudoers.
+    - name: create docker group
+      become: true
+      ansible.builtin.group:
+        name: docker
+        state: present
+      tags: docker
+
+    - name: create aliveornot group
+      become: true
+      ansible.builtin.group:
+        name: aliveornot
+        state: present
+      tags: users,aliveornot
+
+    - name: Create aliveornot account.
       become: true
       user:
-        name: "ansible"
+        name: "aliveornot"
         shell: /bin/bash
-        groups: "sudo"
-      tags: users
+        groups: aliveornot,docker
+        create_home: true
+      tags: users,aliveornot
 
-    - name: deploy authorized ssh public keys
+    - name: deploy authorized ssh public keys for ansible
       become: true
     # Just for neal right now as I don't have pubkeys for rita and alex
       authorized_key:
         user: ansible
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDm7YjW4qIVUr391XcFEZIXHeLhiLTW3+LX7pkem6ECUIz5N7O/FyLKeuMk45YJwGZcTGO+G0FACJUETvma9yiNU/XagD5D/GTOFRgt0wxhsasC/LQ6BYgBOvgCpvkrD5YKp7aCi8mwpAIfKZJgJ6CKT55V2L/vDFSwFw26RuNt74iyhjroIAnM8Aq/YTg6DDDIkphE2SEoIAHTQw7eNtLzIN8LdXuAUVhBKLQGjgaqHkqqwaRgxfB7GMWatiF91GVTiCJgH+hR1Heljn8BFh6mLh1ND/FgP24bSCI2ASeSkbR+6paBVLZx4jX0xSSXY2l8BWdNoys6ugzeULt2hyKFbFlRYODiEtzdql81QL25rWBogstVboyrW2/UJuQjdAG67KxFm/hA4XDXQDg72gP2hf8JN9tdn+pXnEJC6TOif+vhdXhU0rDdWnr1AdFrkxjus+Q23+k2ZoL+4iYySTvkRrBeZF1E0aYRQbPL7umgiUi4omcqyWiuBx0w0vutHFk= neal@neal-xps
-      tags: users
+      tags: base
 
     - name: Add Docker GPG apt Key
       become: true
@@ -97,4 +121,51 @@
         name: docker-compose-plugin=2.6.0~ubuntu-focal
         state: present
       tags: docker
+
+    - name: Install acl
+      become: true
+      apt:
+        name: acl
+        state: present
+      tags: acl
+
+    - name : source bash profiles
+      become: true
+      shell: source ~/.bashrc
+      args:
+        executable: /bin/bash
+      register: sourced
+      tags: acl
+
+
+    - name: Get doctl tarbal
+      become: true
+      get_url:
+        url="https://github.com/digitalocean/doctl/releases/download/v1.76.0/doctl-1.76.0-linux-amd64.tar.gz"
+        dest="/tmp/"
+      register: new_archive
+      tags: doctl
+
+    - name: Unarchive doctl tarball
+      become: true
+      unarchive:
+        src="/tmp/doctl-1.76.0-linux-amd64.tar.gz"
+        dest="/usr/local/bin"
+        copy=no
+      when: new_archive.changed
+      tags: doctl
+
+    # not idempotent :/
+    - name: log in to doctl
+      become: true
+      become_user: aliveornot
+      ansible.builtin.shell: doctl auth init -t {{ api_key }}
+      tags: doctl,aliveornot
+
+    # not idempotent :/
+    - name: log in docker to doctl container registry
+      become: true
+      become_user: aliveornot
+      ansible.builtin.shell: doctl registry login -t {{ api_key }}
+      tags: doctl,aliveornot
     
