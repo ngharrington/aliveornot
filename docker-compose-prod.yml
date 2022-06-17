@@ -16,9 +16,10 @@ services:
       - ./frontend/caddy_data:/data
       - ./docker/files/Caddyfile:/etc/caddy/Caddyfile
     ports:
-      - 8080:8080
+      - 443:8080
+      - 80:8081
     env_file:
-      - caddy.env.dev
+      - caddy.env.prod
     networks:
       aliveornot:
 
