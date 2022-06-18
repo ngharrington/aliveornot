@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api-dev:
-    command: python -m uvicorn app:app --host 0.0.0.0 --port 5000 --reload
+    command: python -m uvicorn app:app --host 0.0.0.0 --port 5000
     image: registry.digitalocean.com/woodward/aliveornot-api-test:latest
     volumes:
       - ./api:/code

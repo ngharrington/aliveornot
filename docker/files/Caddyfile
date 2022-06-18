@@ -8,5 +8,5 @@
 }
 
 {$HTTP_SITE_ADDRESS} {
-        redir {$SITE}
+    redir {$SITE}
 }
