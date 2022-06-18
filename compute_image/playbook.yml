@@ -9,9 +9,9 @@
   tasks:
 
     # Probably a better way to do this
-    - name: Wait for 3 minutes so as to not run into digitalocean init processes (bastards.)
+    - name: Wait for 1 minutes so as to not run into digitalocean init processes (bastards.)
       pause:
-        minutes: 3
+        minutes: 1
 
     - name: Set root group to allow for passwordless sudo
       become: true
@@ -48,12 +48,20 @@
         groups: "sudo"
       tags: base
 
+
+    - name: create docker group
+      become: true
+      ansible.builtin.group:
+        name: docker
+        state: present
+      tags: docker
+
     - name: Create user accounts and make them sudoers.
       become: true
       user:
         name: "{{ item }}"  
         shell: /bin/bash
-        groups: "sudo"
+        groups: "sudo,docker"
       with_items: "{{ users }}"
     
     - name: deploy authorized ssh public keys
@@ -62,13 +70,6 @@
         user: neal
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPb4FdH/vm5+hD0DCt1Bxu1jvjdK/okqRFS/CgQ62790L/CwZOKq599PLPzUPAMCnC1L73kgvggp4uWfLcJoD+LMKJqEkITa9CF0qf/k494gG+LJePAEaRHhKrdisn11NrVBcSOgjJjjlMMa8F2Y7iUqdX3w2cMQuMJOSNdzEZnlDkA906xgVOAHD7nsK/pFh72EhSpx3PTuUlAZaMOKFf3rHzWtuqlmT/o9q/ZRZjSi+jpDZ558+2PdJ81uZzc3q7uKV3wqwqlj6cKI7e/D1ryOxJ4aGjQJPNbVXaIXCa4RnbH7dUhhK0eeHN6niiWoY63JoGRmxImvadcynCN1dWfxcVnhwadAcUh6O6U46XE+9H30hjU2JLAFpORznDOHItaB9BAyKTacog42rgIW6oTRa0lVJcgpV1ca0IhYVMLVQnFMdTxFx6MTUezKbU70cybobLz34piKYN6qnn6NJ6Upfg+mzYb2BJ/LZLcG6OT091izskyP1ydc5dPUK9Ouc= neal@neal-xps
       tags: users
-
-    - name: create docker group
-      become: true
-      ansible.builtin.group:
-        name: docker
-        state: present
-      tags: docker
 
     - name: create aliveornot group
       become: true
