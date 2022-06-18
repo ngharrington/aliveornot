@@ -7,7 +7,7 @@ packer {
   }
 }
 
-variable "api_token" {
+variable "api_key" {
   type = string
   default = ""
 }
@@ -19,7 +19,7 @@ variable "ssh_private_key_file" {
 
 
 source "digitalocean" "webserver" {
-  api_token     = var.api_token
+  api_token     = var.api_key
   image         = "ubuntu-20-04-x64"
   region        = "nyc3"
   size          = "s-1vcpu-1gb"
@@ -38,5 +38,9 @@ build {
     provisioner "ansible" {
       groups = ["webservers"]
       playbook_file = "./playbook.yml"
+      extra_arguments = [
+        "--extra-vars",
+        "api_key=${var.api_key}"
+      ]
     }
 }

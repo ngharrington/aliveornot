@@ -1,6 +1,12 @@
-{$SITE_ADDRESS}
+{$SITE_ADDRESS} {
 
-root * /usr/share/caddy
-file_server
+    root * /usr/share/caddy
+    file_server
 
-reverse_proxy /api* api-dev:5000
+    reverse_proxy /api* api-dev:5000
+
+}
+
+{$HTTP_SITE_ADDRESS} {
+    redir {$SITE}
+}
