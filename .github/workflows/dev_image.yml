@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build image
         run: |
-          docker-compose build api-dev
+          docker-compose build api
           docker image ls
 
       - name: Install doctl                 # install the doctl on the runner
