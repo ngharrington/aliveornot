@@ -1,4 +1,4 @@
-from sys import prefix
+from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -23,6 +23,7 @@ class AliveSchema(BaseModel):
     id: int
     name: str
     is_alive: bool
+    unique_result: bool
 
 app = FastAPI()
 
@@ -45,19 +46,23 @@ async def get_person(id: int) -> AliveSchema:
     return response
     
 @app.get("/api/people")
-async def get_person_by_name(name: str) -> AliveSchema:
+async def get_person_by_name(search: str) -> List[AliveSchema]:
     """Given an full name for a person, respond with information about that person"""
     db = get_db_connection()
     cur = db.cursor()
-    cur.execute("SELECT id, primaryName, case when deathYear is null then 1 else 0 end as is_alive from people where lower(primaryName)=lower(?)", (name,))
-    rows = cur.fetchmany()
-    if len(rows) > 1 or len(rows) == 0:
-        raise Exception("Didn't return a unique result.")
-    row = rows[0]
-    response = AliveSchema(
+    # since this is crude for now we just pick a random result. This must be improved.
+    cur.execute("SELECT id, primaryName, case when deathYear is null then 1 else 0 end as is_alive from people where lower(primaryName)=lower(?) order by random()", (search,))
+    rows = cur.fetchmany(2)
+    try:
+        row = rows[0]
+    except IndexError:
+        return []
+    unique_result = len(rows) == 1
+    response = [AliveSchema(
         id=row[0],
         name=row[1],
-        is_alive=row[2]
-    )
+        is_alive=row[2],
+        unique_result=unique_result,
+    )]
     return response
 
