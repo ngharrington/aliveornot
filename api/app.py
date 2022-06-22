@@ -51,7 +51,6 @@ async def get_person_by_name(name: str) -> AliveSchema:
     cur = db.cursor()
     cur.execute("SELECT id, primaryName, case when deathYear is null then 1 else 0 end as is_alive from people where lower(primaryName)=lower(?)", (name,))
     rows = cur.fetchmany()
-    print(rows)
     if len(rows) > 1 or len(rows) == 0:
         raise Exception("Didn't return a unique result.")
     row = rows[0]
