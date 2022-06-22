@@ -13,6 +13,7 @@ jobs:
         run: |
           docker-compose build api
           docker tag aliveornot-api registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-latest
+          docker image ls
 
       - name: Install doctl                 # install the doctl on the runner
         uses: digitalocean/action-doctl@v2
