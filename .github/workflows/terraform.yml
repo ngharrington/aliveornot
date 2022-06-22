@@ -26,7 +26,7 @@ jobs:
         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      if: steps.filter.outputs.terraform
+      if: steps.filter.outputs.terraform == "true"
       run: |
         cd terraform && terraform init;
         terraform plan -out /tmp/plan.tfplan;
@@ -35,5 +35,5 @@ jobs:
         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      if: steps.filter.outputs.terraform && github.event.pull_request.merged
+      if: steps.filter.outputs.terraform == "true" && github.event.pull_request.merged
       run: cd terraform && terraform init && terraform apply --auto-approve /tmp/plan.tfplan
