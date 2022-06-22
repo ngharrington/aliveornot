@@ -12,7 +12,7 @@ jobs:
       - name: Build image
         run: |
           docker-compose build api
-          docker tag aliveornot-api registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-latest
+          docker tag aliveornot-api registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}
           docker image ls
 
       - name: Install doctl                 # install the doctl on the runner
@@ -23,4 +23,4 @@ jobs:
       - name: push image to digitalocean
         run: |
           doctl registry login
-          docker push registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-latest
+          docker push registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}
