@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: |
+          docker-compose build api
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          docker tag aliveornot-api registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
+          docker image ls
+
+      - name: Install doctl                 # install the doctl on the runner
+        uses: digitalocean/action-doctl@v2
+        with:
+            token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: push image to digitalocean
+        run: |
+          doctl registry login
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          docker push registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
+          
+
