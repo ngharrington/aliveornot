@@ -169,4 +169,6 @@
       become_user: aliveornot
       ansible.builtin.shell: doctl registry login -t {{ api_key }}
       tags: doctl,aliveornot
+
+    
     
