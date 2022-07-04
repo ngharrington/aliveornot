@@ -60,7 +60,7 @@ echo "creating sqlite3 db..."
 rm -f $DB_FILE
 $SQLITE_BINARY $DB_FILE "VACUUM;"
 
-echo "creating sqlite3 target table 'people'..."
+echo "creating sqlite3 target table '${DB_TABLE}'..."
 $SQLITE_BINARY $DB_FILE < $DIRNAME/people.sql
 
 echo "importing to sqlite..."
