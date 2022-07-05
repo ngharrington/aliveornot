@@ -19,6 +19,8 @@ jobs:
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: nyc3
 
+      - uses: s3-actions/s3cmd@v1.2.0
+
       - name: Interact with object storage
         run: |
           mkdir build
