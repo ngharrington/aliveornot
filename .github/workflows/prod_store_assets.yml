@@ -16,7 +16,7 @@ jobs:
           provider: digitalocean # default is linode
           region: nyc3
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - uses: s3-actions/s3cmd@v1.2.0
 
