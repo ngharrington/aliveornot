@@ -28,5 +28,3 @@ jobs:
           cp -r frontend build/
           tar -czvf assets.tar.gz ./build
           s3cmd cp assets.tar.gz s3://aliveornot/aliveornot/assets.tar.gz
-
-
