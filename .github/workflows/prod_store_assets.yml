@@ -14,7 +14,7 @@ jobs:
           # - actions/checkout@v2
         with:
           provider: digitalocean # default is linode
-          region: 'eu-central-1'
+          region: nyc3
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: nyc3
