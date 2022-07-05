@@ -4,9 +4,9 @@ on:
       - main
 
 - name: Set up S3cmd cli tool
-  uses:
-    - s3-actions/s3cmd@v1.2.0
-    - actions/checkout@v2
+  uses: actions/checkout@v2
+    # - s3-actions/s3cmd@v1.2.0
+    # - actions/checkout@v2
   with:
     provider: digitalocean # default is linode
     region: 'eu-central-1'
