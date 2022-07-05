@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up S3cmd cli tool
+        name: Set up S3cmd cli tool
           # - s3-actions/s3cmd@v1.2.0
           # - actions/checkout@v2
         with:
@@ -17,6 +17,7 @@ jobs:
           region: 'eu-central-1'
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: nyc3
 
       - name: Interact with object storage
         run: |
@@ -24,3 +25,7 @@ jobs:
           cp docker-compose-prod.yml build/docker-compose.yml
           cp caddy.env.prod build/caddy.env.prod
           cp -r frontend build/
+          tar -czvf assets.tar.gz ./build
+          s3cmd cp assets.tar.gz s3://aliveornot/aliveornot/assets.tar.gz
+
+
