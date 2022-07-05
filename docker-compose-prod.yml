@@ -3,9 +3,7 @@ version: '3.8'
 services:
   api:
     command: python -m uvicorn app:app --host 0.0.0.0 --port 5000
-    image: registry.digitalocean.com/woodward/aliveornot-api-test:latest
-    volumes:
-      - ./api:/code
+    image: registry.digitalocean.com/woodward/aliveornot-api:latest
     networks:
       aliveornot:
 
@@ -13,8 +11,8 @@ services:
     image: caddy
     volumes: 
       - ./frontend/public:/usr/share/caddy/
-      - ./frontend/caddy_data:/data
-      - ./docker/files/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile
     ports:
       - 443:8080
       - 80:8081
