@@ -4,19 +4,21 @@ on:
       - main
 
 jobs:
-  - name: Set up S3cmd cli tool
-    uses: actions/checkout@v2
-      # - s3-actions/s3cmd@v1.2.0
-      # - actions/checkout@v2
-    with:
-      provider: digitalocean # default is linode
-      region: 'eu-central-1'
-      access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  - name: Interact with object storage
-    run: |
-      mkdir build
-      cp docker-compose-prod.yml build/docker-compose.yml
-      cp caddy.env.prod build/caddy.env.prod
-      cp -r frontend build/
+  store-assets:
+    - name: Set up S3cmd cli tool
+      uses: actions/checkout@v2
+        # - s3-actions/s3cmd@v1.2.0
+        # - actions/checkout@v2
+      with:
+        provider: digitalocean # default is linode
+        region: 'eu-central-1'
+        access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Interact with object storage
+      run: |
+        mkdir build
+        cp docker-compose-prod.yml build/docker-compose.yml
+        cp caddy.env.prod build/caddy.env.prod
+        cp -r frontend build/
