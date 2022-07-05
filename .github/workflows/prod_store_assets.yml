@@ -18,9 +18,15 @@ jobs:
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }
 
+      - uses: s3-actions/s3cmd@v1.2.0
+
       - name: Interact with object storage
         run: |
           mkdir build
           cp docker-compose-prod.yml build/docker-compose.yml
           cp caddy.env.prod build/caddy.env.prod
           cp -r frontend build/
+          tar -czvf assets.tar.gz ./build
+          s3cmd cp assets.tar.gz s3://aliveornot/aliveornot/assets.tar.gz
+
+
