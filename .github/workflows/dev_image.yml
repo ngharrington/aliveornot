@@ -26,4 +26,11 @@ jobs:
           doctl registry login
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           docker push registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
+          old_shas=$(doctl registry repository list-tags  aliveornot-api | grep -E -i -w 'main' | tail -n +3 | awk -F ' ' '{print $8}')
+          while IFS= read -r line; 
+            prefix="sha:"
+            sha=${line#"$prefix"}
+            echo "deleting image manifest with sha $sha"
+            doct registry repository delete-tag aliveornot-api $sha
+          done <<< "$old_shas"
 
