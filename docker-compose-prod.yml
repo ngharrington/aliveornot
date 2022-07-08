@@ -8,11 +8,10 @@ services:
       aliveornot:
 
   caddy:
-    image: caddy
+    image: registry.digitalocean.com/woodward/aliveornot-caddy:latest
     volumes: 
       - ./frontend/public:/usr/share/caddy/
       - ./caddy_data:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile
     ports:
       - 443:8080
       - 80:8081
