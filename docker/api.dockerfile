@@ -8,6 +8,8 @@ RUN pip install --upgrade pip
 RUN adduser worker --disabled-login --disabled-password
 USER worker
 
+COPY --chown=worker:worker ./docker/files/Caddyfile /etc/caddy/Caddyfile
+
 WORKDIR /code
 
 COPY --chown=worker:worker ./api /code/
