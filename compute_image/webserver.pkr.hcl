@@ -17,6 +17,15 @@ variable "ssh_private_key_file" {
   default = ""
 }
 
+variable "aws_key_id" {
+  type = string
+  default = ""
+}
+
+variable "aws_secret" {
+  type = string
+  default = ""
+}
 
 source "digitalocean" "webserver" {
   api_token     = var.api_key
@@ -26,7 +35,7 @@ source "digitalocean" "webserver" {
   ssh_username  = "root"
   snapshot_name = "aliveornot-{{timestamp}}"
   droplet_name  = "packer-webserver"
-  ssh_key_id    = "34686971"
+  ssh_key_id    = "35295647"
   ssh_private_key_file = var.ssh_private_key_file
 }
 
@@ -38,6 +47,6 @@ build {
     provisioner "ansible" {
       groups = ["webservers"]
       playbook_file = "./playbook.yml"
-      extra_arguments = ["--extra-vars", "api_key={{ `api_key` }} aws_key_id={{ `aws_key_id` }} aws_secret={{ `aws_secret` }}"]
+      extra_arguments = ["--extra-vars", "api_key=${var.api_key} aws_key_id=${var.aws_key_id} aws_secret=${var.aws_secret}"]
     }
 }

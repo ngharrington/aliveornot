@@ -167,14 +167,14 @@
     - name: log in to doctl
       become: true
       become_user: aliveornot
-      ansible.builtin.shell: doctl auth init -t {{ api_key }}
+      ansible.builtin.shell: doctl auth init -t '{{ api_key }}'
       tags: doctl,aliveornot
 
     # not idempotent :/
     - name: log in docker to doctl container registry
       become: true
       become_user: aliveornot
-      ansible.builtin.shell: doctl registry login -t {{ api_key }}
+      ansible.builtin.shell: doctl registry login -t '{{ api_key }}'
       tags: doctl,aliveornot
 
     - name: Install webhooks
