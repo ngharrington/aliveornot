@@ -40,4 +40,5 @@ jobs:
             echo "deleting image manifest with sha $line"
             doctl registry repository delete-manifest aliveornot-caddy $line --force
           done <<< "$old_shas"
+          doctl registry logout
           

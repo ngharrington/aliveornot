@@ -1,17 +1,24 @@
 ---
 - name: aliveornot webserver
   hosts: webservers
+  pre_tasks:
+    # Probably a better way to do this
+    - name: Wait for 1 minutes so as to not run into digitalocean init processes (bastards.)
+      pause:
+        minutes: 1
+
+  roles: 
+    - role: s3cmd
+      vars:
+        s3cmd_access_key: '{{ aws_key_id }}'
+        s3cmd_secret_key: '{{ aws_secret }}'
+        s3cmd_user: "root"
   vars:
     users:
     - neal
     - rita
     - alex
   tasks:
-
-    # Probably a better way to do this
-    - name: Wait for 1 minutes so as to not run into digitalocean init processes (bastards.)
-      pause:
-        minutes: 1
 
     - name: Set root group to allow for passwordless sudo
       become: true

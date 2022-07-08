@@ -50,3 +50,4 @@ jobs:
               doctl registry repository delete-manifest aliveornot-caddy $line --force
             done <<< "$old_shas"
           fi
+          doctl registry logout
