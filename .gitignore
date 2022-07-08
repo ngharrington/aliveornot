@@ -3,4 +3,4 @@ __pycache__/
 *.sqlite
 .terraform.lock.hcl
 .terraform/
-frontend/caddy_data/caddy
+caddy_data/caddy
