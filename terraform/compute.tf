@@ -9,13 +9,14 @@ resource "digitalocean_floating_ip" "aliveornot-floating-ip" {
 }
 
 resource "digitalocean_droplet" "aliveornot-01" {
-  image  = "112154427"
+  image  = "112173072"
   name   = "aliveornot-01"
   region = "nyc3"
   size   = "s-1vcpu-1gb"
   ssh_keys = [
     data.digitalocean_ssh_key.neal.id
   ]
+  user_data = file("./startup.sh")
 }
 
 resource "digitalocean_floating_ip_assignment" "foobar" {
