@@ -3,7 +3,7 @@
     root * /usr/share/caddy
     file_server
 
-    reverse_proxy /api* api-dev:5000
+    reverse_proxy /api* api:5000
 
     log {
         output file /var/log/access.log {

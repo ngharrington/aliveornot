@@ -12,12 +12,14 @@ services:
     networks:
       aliveornot:
 
-  static:
-    image: caddy
+  caddy:
+    build:
+      context: .
+      dockerfile: ./docker/caddy.dockerfile
+    image: aliveornot-caddy
     volumes: 
       - ./frontend/public:/usr/share/caddy/
-      - ./frontend/caddy_data:/data
-      - ./docker/files/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
     ports:
       - 8080:8080
       - 8081:8081

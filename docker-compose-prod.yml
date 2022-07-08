@@ -7,7 +7,7 @@ services:
     networks:
       aliveornot:
 
-  static:
+  caddy:
     image: caddy
     volumes: 
       - ./frontend/public:/usr/share/caddy/

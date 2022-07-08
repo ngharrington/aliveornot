@@ -170,5 +170,13 @@
       ansible.builtin.shell: doctl registry login -t {{ api_key }}
       tags: doctl,aliveornot
 
+    - name: Install webhooks
+      become: true
+      apt:
+        name: webhook
+        state: present
+        update_cache: false
+      tags: docker
+
     
     

@@ -11,9 +11,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build image
         run: |
-          docker-compose build api
+          docker-compose build
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           docker tag aliveornot-api registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
+          docker tag aliveornot-caddy registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
           docker image ls
 
       - name: Install doctl                 # install the doctl on the runner
@@ -26,10 +27,17 @@ jobs:
           doctl registry login
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           docker push registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
+          docker push registry.digitalocean.com/woodward/aliveornot-caddy:${GITHUB_REF##*/}-${git_hash}
           old_shas=$(doctl registry repository list-tags  aliveornot-api | grep -E -i -w 'development' | tail -n +3 | awk -F ' ' '{print $8}')
           while IFS= read -r line; 
           do
             echo "deleting image manifest with sha $line"
             doctl registry repository delete-manifest aliveornot-api $line --force
+          done <<< "$old_shas"
+          old_shas=$(doctl registry repository list-tags  aliveornot-caddy | grep -E -i -w 'development' | tail -n +3 | awk -F ' ' '{print $8}')
+          while IFS= read -r line; 
+          do
+            echo "deleting image manifest with sha $line"
+            doctl registry repository delete-manifest aliveornot-caddy $line --force
           done <<< "$old_shas"
           
