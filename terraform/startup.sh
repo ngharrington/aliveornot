@@ -15,7 +15,7 @@ rm -f /home/aliveornot/build/db.sqlite
 s3cmd get s3://aliveornot/aliveornot/db.sqlite /home/aliveornot/build/db.sqlite
 
 # make aliveornot user the owner
-sudo chown -R aliveornot:aliveornot /home/aliveornot/build
+chown -R aliveornot:aliveornot /home/aliveornot/build
 
 # set up the systemd unit for the compose service
 cat >/etc/systemd/system/docker-compose@.service <<EOL
@@ -36,3 +36,5 @@ ExecStop=/usr/bin/docker compose down
 [Install]
 WantedBy=multi-user.target
 EOL
+
+systemctl start docker-compose@aliveornot
