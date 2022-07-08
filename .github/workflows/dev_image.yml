@@ -28,9 +28,8 @@ jobs:
           docker push registry.digitalocean.com/woodward/aliveornot-api:${GITHUB_REF##*/}-${git_hash}
           old_shas=$(doctl registry repository list-tags  aliveornot-api | grep -E -i -w 'development' | tail -n +3 | awk -F ' ' '{print $8}')
           while IFS= read -r line; 
-            do prefix="sha256:"
-            sha=${line#"$prefix"}
-            echo "deleting image manifest with sha $sha"
-            doctl registry repository delete-manifest aliveornot-api $sha --force
+          do
+            echo "deleting image manifest with sha $line"
+            doctl registry repository delete-manifest aliveornot-api $line --force
           done <<< "$old_shas"
-
+          
