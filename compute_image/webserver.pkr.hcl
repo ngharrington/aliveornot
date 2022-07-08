@@ -38,9 +38,6 @@ build {
     provisioner "ansible" {
       groups = ["webservers"]
       playbook_file = "./playbook.yml"
-      extra_arguments = [
-        "--extra-vars",
-        "api_key=${var.api_key}"
-      ]
+      extra_arguments = ["--extra-vars", "api_key={{ `api_key` }} aws_key_id={{ `aws_key_id` }} aws_secret={{ `aws_secret` }}"]
     }
 }
