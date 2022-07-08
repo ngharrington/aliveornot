@@ -31,6 +31,6 @@ jobs:
             do prefix="sha256:"
             sha=${line#"$prefix"}
             echo "deleting image manifest with sha $sha"
-            doctl registry repository delete-tag aliveornot-api $sha --force
+            doctl registry repository delete-manifest aliveornot-api $sha --force
           done <<< "$old_shas"
 
