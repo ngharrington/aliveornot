@@ -15,9 +15,9 @@ resource "digitalocean_record" "root" {
   value  = digitalocean_floating_ip.aliveornot-floating-ip.ip_address
 }
 
-resource "digitalocean_record" "www" {
-  domain = digitalocean_domain.default.id
-  type   = "A"
-  name   = "www"
-  value  = digitalocean_floating_ip.aliveornot-floating-ip.ip_address
-}
+# resource "digitalocean_record" "www" {
+#   domain = digitalocean_domain.default.id
+#   type   = "A"
+#   name   = "www"
+#   value  = digitalocean_floating_ip.aliveornot-floating-ip.ip_address
+# }
