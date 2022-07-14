@@ -6,16 +6,17 @@ set -e
 rm -f /home/aliveornot/assets.tar.gz
 rm -rf /home/aliveornot/build
 
-# Prepare the sqlite db
-rm -f /home/aliveornot/build/db.sqlite
-s3cmd get s3://aliveornot/aliveornot/db.sqlite /home/aliveornot/build/db.sqlite
-
 if [ "$HOME" = "/root" ];
 then
     cp ${HOME}/.s3cfg /home/aliveornot/.s3cfg;
     chown aliveornot:aliveornot /home/aliveornot/.s3cfg;
 fi
 
+# Prepare the sqlite db
+rm -f /home/aliveornot/build/db.sqlite
+s3cmd get s3://aliveornot/aliveornot/db.sqlite /home/aliveornot/build/db.sqlite
+
+# get static assets and docker-compose files.
 s3cmd get s3://aliveornot/aliveornot/assets.tar.gz /home/aliveornot/assets.tar.gz
 cd /home/aliveornot
 tar xzvf /home/aliveornot/assets.tar.gz
