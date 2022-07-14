@@ -5,14 +5,22 @@ set -e
 # Prepare the static files, the docker-compose file, and the caddy env variable file
 rm -f /home/aliveornot/assets.tar.gz
 rm -rf /home/aliveornot/build
-s3cmd get s3://aliveornot/aliveornot/assets.tar.gz /home/aliveornot/assets.tar.gz
-cd /home/aliveornot
-tar xzvf /home/aliveornot/assets.tar.gz
 
+if [ "$HOME" = "/root" ];
+then
+    cp ${HOME}/.s3cfg /home/aliveornot/.s3cfg;
+    chown aliveornot:aliveornot /home/aliveornot/.s3cfg;
+fi
 
 # Prepare the sqlite db
 rm -f /home/aliveornot/build/db.sqlite
 s3cmd get s3://aliveornot/aliveornot/db.sqlite /home/aliveornot/build/db.sqlite
+
+# get static assets and docker-compose files.
+s3cmd get s3://aliveornot/aliveornot/assets.tar.gz /home/aliveornot/assets.tar.gz
+cd /home/aliveornot
+tar xzvf /home/aliveornot/assets.tar.gz
+
 
 # make aliveornot user the owner
 chown -R aliveornot:aliveornot /home/aliveornot/assets.tar.gz
