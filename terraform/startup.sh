@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+
 # Prepare the static files, the docker-compose file, and the caddy env variable file
 rm -f /root/assets.tar.gz
 rm -rf /home/aliveornot/build
@@ -36,5 +37,10 @@ ExecStop=/usr/bin/docker compose down
 [Install]
 WantedBy=multi-user.target
 EOL
+
+echo "stopping service and reloading daemons"
+systemctl daemon-reload
+systemctl stop docker-compose@aliveornot
+
 
 systemctl start docker-compose@aliveornot

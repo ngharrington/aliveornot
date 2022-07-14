@@ -16,7 +16,3 @@
 {$HTTP_SITE_ADDRESS} {
 	redir {$SITE}
 }
-
-{$WWW_SITE_ADDRESS} {
-	redir {$SITE}
-}
