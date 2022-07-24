@@ -1,0 +1,10 @@
+- fail: msg="You must define s3cmd_access_key"
+  when: s3cmd_access_key is not defined
+
+- fail: msg="You must define s3cmd_secret_key"
+  when: s3cmd_secret_key is not defined
+
+- fail: msg="You must define s3cmd_user"
+  when: s3cmd_user is not defined
+
+- include: s3cmd.yml tags=s3cmd

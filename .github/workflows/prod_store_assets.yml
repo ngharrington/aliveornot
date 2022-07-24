@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  store-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: s3-actions/s3cmd@v1.2.0
+        with:
+          provider: digitalocean # default is linode
+          region: nyc3
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Interact with object storage
+        run: |
+          mkdir build
+          cp docker-compose-prod.yml build/docker-compose.yml
+          cp caddy.env.prod build/caddy.env.prod
+          cp -r frontend build/
+          tar -czvf assets.tar.gz ./build
+          s3cmd put assets.tar.gz s3://aliveornot/aliveornot/assets.tar.gz

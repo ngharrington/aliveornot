@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.sqlite
+.terraform.lock.hcl
+.terraform/
+caddy_data/caddy
