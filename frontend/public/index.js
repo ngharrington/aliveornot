@@ -8,7 +8,6 @@ function buildMessage(apiResponse) {
         apiResponse = []
     }
     let apiResponseLength = Object.keys(apiResponse).length;
-    console.log(apiResponseLength);
     if (apiResponseLength == 0) {
         message = "NOT (Unknown Person)"
     }
@@ -17,6 +16,7 @@ function buildMessage(apiResponse) {
     }
     return message
   }
+  
 
 a.addEventListener('submit',function(e) {
     e.preventDefault();
