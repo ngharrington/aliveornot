@@ -55,3 +55,11 @@ docker system prune -a -f
 
 echo "starting service"
 systemctl start docker-compose@aliveornot
+
+
+# Journal isn't working until a restart
+# Thinking I"m running into some of these problems
+# https://www.digitalocean.com/community/questions/journalctl-command-shows-no-logs
+# https://www.digitalocean.com/community/questions/ubuntu-journal-is-broken-on-boot
+# TODO: Dig deeper on this but this is fine for now.
+systemctl restart systemd-journald
