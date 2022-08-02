@@ -13,12 +13,22 @@
         s3cmd_access_key: '{{ aws_key_id }}'
         s3cmd_secret_key: '{{ aws_secret }}'
         s3cmd_user: "root"
+    - role: docker
+      vars:
+        docker_config_log_driver: journald
   vars:
     users:
     - neal
     - rita
     - alex
   tasks:
+
+    - name: Restart journald
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      with_items:
+        - systemd-journald
 
     - name: Set root group to allow for passwordless sudo
       become: true
@@ -102,27 +112,6 @@
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDm7YjW4qIVUr391XcFEZIXHeLhiLTW3+LX7pkem6ECUIz5N7O/FyLKeuMk45YJwGZcTGO+G0FACJUETvma9yiNU/XagD5D/GTOFRgt0wxhsasC/LQ6BYgBOvgCpvkrD5YKp7aCi8mwpAIfKZJgJ6CKT55V2L/vDFSwFw26RuNt74iyhjroIAnM8Aq/YTg6DDDIkphE2SEoIAHTQw7eNtLzIN8LdXuAUVhBKLQGjgaqHkqqwaRgxfB7GMWatiF91GVTiCJgH+hR1Heljn8BFh6mLh1ND/FgP24bSCI2ASeSkbR+6paBVLZx4jX0xSSXY2l8BWdNoys6ugzeULt2hyKFbFlRYODiEtzdql81QL25rWBogstVboyrW2/UJuQjdAG67KxFm/hA4XDXQDg72gP2hf8JN9tdn+pXnEJC6TOif+vhdXhU0rDdWnr1AdFrkxjus+Q23+k2ZoL+4iYySTvkRrBeZF1E0aYRQbPL7umgiUi4omcqyWiuBx0w0vutHFk= neal@neal-xps
       tags: base
 
-    - name: Add Docker GPG apt Key
-      become: true
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker Repository
-      become: true
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
-        state: present
-      tags: docker
-
-    - name: Update apt and install docker-ce
-      become: true
-      apt:
-        name: docker-ce=5:20.10.17~3-0~ubuntu-focal
-        state: present
-        update_cache: true
-      tags: docker
-
     - name: Install docker-compose
       become: true
       apt:
@@ -184,6 +173,13 @@
         state: present
         update_cache: false
       tags: docker
+
+      # Why: https://serverfault.com/questions/1058259/journalctl-stops-working-randomly-after-boot-on-digitalocean-droplet
+    - name: clean up machine id
+      become: false
+      ansible.builtin.file:
+        path: /var/lib/dbus/machine-id
+        state: absent
 
     
     
