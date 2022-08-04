@@ -5,7 +5,7 @@
 	reverse_proxy /api* api:5000
 
 	log {
-		output file /var/log/access.log {
+		output file /data/log/aliveornot_access.log {
 			roll_size 1gb
 			roll_keep 5
 			roll_keep_for 720h
@@ -15,4 +15,12 @@
 
 {$HTTP_SITE_ADDRESS} {
 	redir {$SITE}
+
+	log {
+		output file /data/log/aliveornot_access_http.log {
+			roll_size 1gb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
 }
