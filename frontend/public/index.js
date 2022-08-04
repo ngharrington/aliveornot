@@ -1,5 +1,6 @@
-var a = document.getElementById('aon-searchbar');
-var result = document.getElementById('aon-result');
+var a = document.getElementById('search-bar');
+var result = document.getElementById('result');
+var b = document.getElementById("submitbutton");
 
 function buildMessage(apiResponse) {
     let message = null;
@@ -18,9 +19,9 @@ function buildMessage(apiResponse) {
   }
   
 
-a.addEventListener('submit',function(e) {
+b.addEventListener('click', function(e) {
     e.preventDefault();
-    var inputName = document.getElementById('aon-textfield').value;
+    var inputName = document.getElementById('search-bar').value;
     fetch("/api/people?" + new URLSearchParams({"search": inputName}))
         .then(response => response.json())
         .then(data => {
