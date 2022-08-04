@@ -1,14 +1,14 @@
-var a = document.getElementById('aon-searchbar');
-var result = document.getElementById('aon-result');
+var a = document.getElementById('search-bar');
+var result = document.getElementById('result');
+var b = document.getElementById("submitbutton");
 
 function buildMessage(apiResponse) {
     let message = null;
-    console.log(apiResponse)
     if (apiResponse == null) {
         apiResponse = []
     }
     let apiResponseLength = Object.keys(apiResponse).length;
-    console.log(apiResponseLength);
+    console.log(apiResponse);
     if (apiResponseLength == 0) {
         message = "NOT (Unknown Person)"
     }
@@ -18,13 +18,19 @@ function buildMessage(apiResponse) {
     return message
   }
 
-a.addEventListener('submit',function(e) {
-    e.preventDefault();
-    var inputName = document.getElementById('aon-textfield').value;
+function runRequest(e) {
+    var inputName = document.getElementById('search-bar').value;
     fetch("/api/people?" + new URLSearchParams({"search": inputName}))
         .then(response => response.json())
         .then(data => {
             message = buildMessage(data)
             result.innerHTML = `<h1>${message}</h1>`;
         });
-});
+}
+
+function runOnEnter(e) {
+    if (e.keyCode == 13) {
+        runRequest(e);
+    }
+}
+  
