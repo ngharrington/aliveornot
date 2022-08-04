@@ -4,11 +4,11 @@ var b = document.getElementById("submitbutton");
 
 function buildMessage(apiResponse) {
     let message = null;
-    console.log(apiResponse)
     if (apiResponse == null) {
         apiResponse = []
     }
     let apiResponseLength = Object.keys(apiResponse).length;
+    console.log(apiResponse);
     if (apiResponseLength == 0) {
         message = "NOT (Unknown Person)"
     }
@@ -17,10 +17,8 @@ function buildMessage(apiResponse) {
     }
     return message
   }
-  
 
-b.addEventListener('click', function(e) {
-    e.preventDefault();
+function runRequest(e) {
     var inputName = document.getElementById('search-bar').value;
     fetch("/api/people?" + new URLSearchParams({"search": inputName}))
         .then(response => response.json())
@@ -28,4 +26,16 @@ b.addEventListener('click', function(e) {
             message = buildMessage(data)
             result.innerHTML = `<h1>${message}</h1>`;
         });
-});
+}
+
+function runOnEnter(e) {
+    if (e.keyCode == 13) {
+        runRequest(e);
+    }
+}
+  
+
+// b.addEventListener('click', function(e) {
+//     e.preventDefault();
+//     runRequest();
+// });
