@@ -34,8 +34,3 @@ function runOnEnter(e) {
     }
 }
   
-
-// b.addEventListener('click', function(e) {
-//     e.preventDefault();
-//     runRequest();
-// });
