@@ -45,11 +45,10 @@ async function autocompleteMatch(input) {
 }
 
 async function showResults(val) {
-    res = document.getElementById("answer");
+    res = document.getElementById("result");
     res.innerHTML = '';
     let list = '';
     let terms = await autocompleteMatch(val);
-    console.log("blah")
     console.log(terms.length)
     for (i=0; i<terms.length; i++) {
         list += '<li>' + terms[i]["name"] + '</li>';
