@@ -36,7 +36,7 @@ async def get_person(id: int) -> AliveSchema:
     """Given an ID for a person, respond with information about that person"""
     db = get_db_connection()
     cur = db.cursor()
-    cur.execute("SELECT id, primaryName, case when deathYear is null then 1 else 0 end as is_alive from people where id=?", (id,))
+    cur.execute("SELECT nconst, primaryName, alive as is_alive from alive where nconst=?", (id,))
     row = cur.fetchone()
     response = AliveSchema(
         id=row[0],
@@ -51,7 +51,7 @@ async def get_person_by_name(search: str) -> List[AliveSchema]:
     db = get_db_connection()
     cur = db.cursor()
     # since this is crude for now we just pick a random result. This must be improved.
-    cur.execute("SELECT id, primaryName, case when deathYear is null then 1 else 0 end as is_alive from people where lower(primaryName)=lower(?) order by random()", (search,))
+    cur.execute("SELECT nconst, primaryName, alive as is_alive from alive where lower(primaryName)=lower(?) order by random()", (search,))
     rows = cur.fetchmany(2)
     try:
         row = rows[0]
