@@ -51,7 +51,7 @@ async def get_person_by_name(search: str) -> List[AliveSchema]:
     db = get_db_connection()
     cur = db.cursor()
     # since this is crude for now we just pick a random result. This must be improved.
-    cur.execute("SELECT nconst, primaryName, alive as is_alive from alive where lower(primaryName)=lower(?) order by random()", (search,))
+    cur.execute("SELECT nconst, primaryName, alive as is_alive from alive where lower(primaryName)=lower(?) order by totalVotes desc", (search,))
     rows = cur.fetchmany(2)
     try:
         row = rows[0]
