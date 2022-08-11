@@ -45,7 +45,7 @@ async function autocompleteMatch(input) {
 }
 
 async function showResults(val) {
-    res = document.getElementById("result");
+    res = document.getElementById("results-list");
     res.innerHTML = '';
     let list = '';
     let terms = await autocompleteMatch(val);
@@ -53,5 +53,12 @@ async function showResults(val) {
     for (i=0; i<terms.length; i++) {
         list += '<li>' + terms[i]["name"] + '</li>';
     }
-    res.innerHTML = '<ul>' + list + '</ul>';
+    res.innerHTML = list;
 }
+
+
+var ul = document.getElementById('results-list');
+ul.onclick = function(event) {
+    var target = event.target;
+    alert(event.target.innerHTML);
+};  
