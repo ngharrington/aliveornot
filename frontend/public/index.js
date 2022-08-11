@@ -1,5 +1,5 @@
 var a = document.getElementById('search-bar');
-var result = document.getElementById('result');
+var answer = document.getElementById('answer');
 var b = document.getElementById("submitbutton");
 
 function buildMessage(apiResponse) {
@@ -8,7 +8,6 @@ function buildMessage(apiResponse) {
         apiResponse = []
     }
     let apiResponseLength = Object.keys(apiResponse).length;
-    console.log(apiResponse);
     if (apiResponseLength == 0) {
         message = "NOT (Unknown Person)"
     }
@@ -18,19 +17,48 @@ function buildMessage(apiResponse) {
     return message
   }
 
-function runRequest(e) {
+async function runRequest(e) {
     var inputName = document.getElementById('search-bar').value;
-    fetch("/api/people?" + new URLSearchParams({"search": inputName}))
-        .then(response => response.json())
-        .then(data => {
-            message = buildMessage(data)
-            result.innerHTML = `<h1>${message}</h1>`;
-        });
+    let response = await fetch("/api/people?" + new URLSearchParams({"search": inputName})).then();
+    console.log(response)
+    let data = response.json();
+    return data
 }
 
 function runOnEnter(e) {
     if (e.keyCode == 13) {
+        console.log("here");
         runRequest(e);
     }
 }
-  
+
+
+
+var search_terms = ['apple', 'apple watch', 'apple macbook', 'apple macbook pro', 'iphone', 'iphone 12'];
+
+async function autocompleteMatch(input) {
+  if (input == '') {
+    return [];
+  }
+
+  return await runRequest(input)
+}
+
+async function showResults(val) {
+    res = document.getElementById("results-list");
+    res.innerHTML = '';
+    let list = '';
+    let terms = await autocompleteMatch(val);
+    console.log(terms.length)
+    for (i=0; i<terms.length; i++) {
+        list += '<li>' + terms[i]["name"] + '</li>';
+    }
+    res.innerHTML = list;
+}
+
+
+var ul = document.getElementById('results-list');
+ul.onclick = function(event) {
+    var target = event.target;
+    alert(event.target.innerHTML);
+};  

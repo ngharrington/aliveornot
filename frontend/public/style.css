@@ -1,4 +1,4 @@
-ul {
+/* ul {
   list-style-type: none;
   overflow: hidden;
 }
@@ -17,7 +17,7 @@ li a {
 }
 li a:hover {
   text-decoration: underline;
-}
+} */
 .grid{
   height:23px;
   position:relative;
@@ -58,12 +58,6 @@ li a:hover {
   outline: none;
   
 }
-.voice{
-  height:20px;
-  position:relative;
-  top:5px;
-  left:10px;
-}
 .buttons{
   margin-top:30px;
 }
@@ -86,4 +80,22 @@ li a:hover {
   border:1px solid #4885ed;
   padding: 9px 19px;
 }
+#result {
+  border: 1px dotted #ccc;
+  padding: 3px;
+}
+#result ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+#result ul li {
+    height: 20px;
+    margin: 10px;
+    padding: 0;
+}
 
+#result ul li:hover {
+  background: #eee;
+}
