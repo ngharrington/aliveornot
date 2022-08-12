@@ -2,6 +2,8 @@ var a = document.getElementById('search-bar');
 var answer = document.getElementById('answer');
 var b = document.getElementById("submitbutton");
 
+var searchResults = []
+
 function buildMessage(apiResponse) {
     let message = null;
     if (apiResponse == null) {
@@ -20,7 +22,6 @@ function buildMessage(apiResponse) {
 async function runRequest(e) {
     var inputName = document.getElementById('search-bar').value;
     let response = await fetch("/api/people?" + new URLSearchParams({"search": inputName})).then();
-    console.log(response)
     let data = response.json();
     return data
 }
@@ -32,10 +33,6 @@ function runOnEnter(e) {
     }
 }
 
-
-
-var search_terms = ['apple', 'apple watch', 'apple macbook', 'apple macbook pro', 'iphone', 'iphone 12'];
-
 async function autocompleteMatch(input) {
   if (input == '') {
     return [];
@@ -45,20 +42,45 @@ async function autocompleteMatch(input) {
 }
 
 async function showResults(val) {
+    answer = document.getElementById("answer");
+    answer.innerHTML = "";
     res = document.getElementById("results-list");
     res.innerHTML = '';
     let list = '';
     let terms = await autocompleteMatch(val);
-    console.log(terms.length)
+    searchResults = terms
     for (i=0; i<terms.length; i++) {
-        list += '<li>' + terms[i]["name"] + '</li>';
+        list += '<li data-id="' + terms[i]["id"] +'">' + terms[i]["name"] + '</li>';
     }
     res.innerHTML = list;
+}
+
+async function getAliveStatus(id) {
+    let response = await fetch("/api/people/" + id);
+    let data = response.json();
+    return data
 }
 
 
 var ul = document.getElementById('results-list');
 ul.onclick = function(event) {
     var target = event.target;
-    alert(event.target.innerHTML);
-};  
+    if (target.nodeName == "LI") {
+      getAliveStatus(target.dataset.id).then(
+        (data) => {
+            box = document.getElementById("search-bar");
+            console.log(target);
+            box.value = target.innerText
+            res = document.getElementById("results-list");
+            res.innerHTML = "";
+            answer = document.getElementById("answer");
+            if (data.is_alive) {
+                answer.innerHTML = "<H2>ALIVE</H2>";
+            } else {
+                answer.innerHTML = "<H@>NOT</H2>";
+            }
+        }
+      )
+    }
+};
+
