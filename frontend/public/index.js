@@ -1,6 +1,8 @@
 var a = document.getElementById('search-bar');
-var result = document.getElementById('result');
+var answer = document.getElementById('answer');
 var b = document.getElementById("submitbutton");
+
+var searchResults = []
 
 function buildMessage(apiResponse) {
     let message = null;
@@ -8,7 +10,6 @@ function buildMessage(apiResponse) {
         apiResponse = []
     }
     let apiResponseLength = Object.keys(apiResponse).length;
-    console.log(apiResponse);
     if (apiResponseLength == 0) {
         message = "NOT (Unknown Person)"
     }
@@ -18,19 +19,68 @@ function buildMessage(apiResponse) {
     return message
   }
 
-function runRequest(e) {
+async function runRequest(e) {
     var inputName = document.getElementById('search-bar').value;
-    fetch("/api/people?" + new URLSearchParams({"search": inputName}))
-        .then(response => response.json())
-        .then(data => {
-            message = buildMessage(data)
-            result.innerHTML = `<h1>${message}</h1>`;
-        });
+    let response = await fetch("/api/people?" + new URLSearchParams({"search": inputName})).then();
+    let data = response.json();
+    return data
 }
 
 function runOnEnter(e) {
     if (e.keyCode == 13) {
+        console.log("here");
         runRequest(e);
     }
 }
-  
+
+async function autocompleteMatch(input) {
+  if (input == '') {
+    return [];
+  }
+
+  return await runRequest(input)
+}
+
+async function showResults(val) {
+    answer = document.getElementById("answer");
+    answer.innerHTML = "";
+    res = document.getElementById("results-list");
+    res.innerHTML = '';
+    let list = '';
+    let terms = await autocompleteMatch(val);
+    searchResults = terms
+    for (i=0; i<terms.length; i++) {
+        list += '<li data-id="' + terms[i]["id"] +'">' + terms[i]["name"] + '</li>';
+    }
+    res.innerHTML = list;
+}
+
+async function getAliveStatus(id) {
+    let response = await fetch("/api/people/" + id);
+    let data = response.json();
+    return data
+}
+
+
+var ul = document.getElementById('results-list');
+ul.onclick = function(event) {
+    var target = event.target;
+    if (target.nodeName == "LI") {
+      getAliveStatus(target.dataset.id).then(
+        (data) => {
+            box = document.getElementById("search-bar");
+            console.log(target);
+            box.value = target.innerText
+            res = document.getElementById("results-list");
+            res.innerHTML = "";
+            answer = document.getElementById("answer");
+            if (data.is_alive) {
+                answer.innerHTML = "<H2>ALIVE</H2>";
+            } else {
+                answer.innerHTML = "<H@>NOT</H2>";
+            }
+        }
+      )
+    }
+};
+
