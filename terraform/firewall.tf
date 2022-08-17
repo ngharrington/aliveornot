@@ -21,6 +21,13 @@ resource "digitalocean_firewall" "web" {
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
+  # for the woodward api
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "8089"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
   inbound_rule {
     protocol         = "icmp"
     source_addresses = ["0.0.0.0/0", "::/0"]
