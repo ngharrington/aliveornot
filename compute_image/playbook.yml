@@ -95,7 +95,7 @@
         state: present
       tags: users,aliveornot
 
-    - name: Create aliveornot account.
+    - name: Create aliveornot user.
       become: true
       user:
         name: "aliveornot"
@@ -104,9 +104,25 @@
         create_home: true
       tags: users,aliveornot
 
+    - name: create woodward group
+      become: true
+      ansible.builtin.group:
+        name: woodward
+        state: present
+      tags: users,woodward
+
+    - name: Create woodward user.
+      become: true
+      user:
+        name: "woodward"
+        shell: /bin/bash
+        groups: woodward,docker
+        create_home: true
+      tags: users,woodward
+
+
     - name: deploy authorized ssh public keys for ansible
       become: true
-    # Just for neal right now as I don't have pubkeys for rita and alex
       authorized_key:
         user: ansible
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDm7YjW4qIVUr391XcFEZIXHeLhiLTW3+LX7pkem6ECUIz5N7O/FyLKeuMk45YJwGZcTGO+G0FACJUETvma9yiNU/XagD5D/GTOFRgt0wxhsasC/LQ6BYgBOvgCpvkrD5YKp7aCi8mwpAIfKZJgJ6CKT55V2L/vDFSwFw26RuNt74iyhjroIAnM8Aq/YTg6DDDIkphE2SEoIAHTQw7eNtLzIN8LdXuAUVhBKLQGjgaqHkqqwaRgxfB7GMWatiF91GVTiCJgH+hR1Heljn8BFh6mLh1ND/FgP24bSCI2ASeSkbR+6paBVLZx4jX0xSSXY2l8BWdNoys6ugzeULt2hyKFbFlRYODiEtzdql81QL25rWBogstVboyrW2/UJuQjdAG67KxFm/hA4XDXQDg72gP2hf8JN9tdn+pXnEJC6TOif+vhdXhU0rDdWnr1AdFrkxjus+Q23+k2ZoL+4iYySTvkRrBeZF1E0aYRQbPL7umgiUi4omcqyWiuBx0w0vutHFk= neal@neal-xps
@@ -165,6 +181,19 @@
       become_user: aliveornot
       ansible.builtin.shell: doctl registry login -t '{{ api_key }}'
       tags: doctl,aliveornot
+
+    - name: log in to doctl
+      become: true
+      become_user: woodward
+      ansible.builtin.shell: doctl auth init -t '{{ api_key }}'
+      tags: doctl,woodward
+
+    # not idempotent :/
+    - name: log in docker to doctl container registry
+      become: true
+      become_user: woodward
+      ansible.builtin.shell: doctl registry login -t '{{ api_key }}'
+      tags: doctl,woodward
 
     - name: Install webhooks
       become: true

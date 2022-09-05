@@ -9,7 +9,7 @@ resource "digitalocean_floating_ip" "aliveornot-floating-ip" {
 }
 
 resource "digitalocean_droplet" "aliveornot-01" {
-  image  = "113905936"
+  image  = "115128075"
   name   = "aliveornot-01"
   region = "nyc3"
   size   = "s-1vcpu-1gb"
